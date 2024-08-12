@@ -77,16 +77,11 @@ wandb.init(project="DCGAN-CelebA", config=opt.__dict__)
 # Training loop
 for epoch in range(opt.n_epochs):
     for i,imgs in enumerate(dataloader):
-​
         # Adversarial ground truths
         valid = Variable(Tensor(imgs.shape[0], 1).fill_(1.0), requires_grad=False)
         fake = Variable(Tensor(imgs.shape[0], 1).fill_(0.0), requires_grad=False)
-​
         # Configure input
         real_imgs = Variable(imgs.type(Tensor))
-        
-        
-​
         # Train Generator
         optimizer_G.zero_grad()
 ​
