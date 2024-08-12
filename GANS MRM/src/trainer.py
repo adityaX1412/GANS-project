@@ -72,7 +72,8 @@ optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt
 
 Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 
-wandb.login(key="833b800ff23eb3d26e6c85a8b9e1fc8bbafc9775wandb.init(project="DCGAN-CelebA", config=opt.__dict__)
+wandb.login(key="833b800ff23eb3d26e6c85a8b9e1fc8bbafc9775")
+wandb.init(project="DCGAN-CelebA", config=opt.__dict__)
 # Training loop
 for epoch in range(opt.n_epochs):
     for i,imgs in enumerate(dataloader):
