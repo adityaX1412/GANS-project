@@ -15,8 +15,8 @@ import torch.nn.functional as F
 import torch
 import wandb
 
-from utils.dataloader.py import CelebADataset
-from utils.gans.py import Generator, Discriminator
+from utils.dataloader import CelebADataset
+from utils.gans import Generator, Discriminator
 
 cuda = True if torch.cuda.is_available() else False
 
