@@ -31,7 +31,7 @@ parser.add_argument("--latent_dim", type=int, default=100, help="dimensionality 
 parser.add_argument("--img_size", type=int, default=128, help="size of each image dimension")
 parser.add_argument("--channels", type=int, default=3, help="number of image channels")
 parser.add_argument("--sample_interval", type=int, default=400, help="interval between image sampling")
-parser.add_argument("--wd", type=float, default=0.0, help="weight decay for the optimizer")
+parser.add_argument("--wd", type=float, default=0.003, help="weight decay for the optimizer")
 opt = parser.parse_args(args=[])
 
 transform = transforms.Compose([
