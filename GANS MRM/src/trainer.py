@@ -1,10 +1,12 @@
 import wandb
+import argparse
+import numpy as np
+import math
 import torch
 import numpy as np
 from torch.autograd import Variable
 
-# Initialize wandb
-wandb.init(project="DCGAN-CelebA-Inpainting", config=opt.__dict__)
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--n_epochs", type=int, default=200, help="number of epochs of training")
@@ -19,6 +21,9 @@ parser.add_argument("--channels", type=int, default=3, help="number of image cha
 parser.add_argument("--sample_interval", type=int, default=400, help="interval between image sampling")
 parser.add_argument("--wd", type=float, default=0.003, help="weight decay for the optimizer")
 opt = parser.parse_args(args=[])
+
+# Initialize wandb
+wandb.init(project="DCGAN-CelebA-Inpainting", config=opt.__dict__)
 
 # Training loop
 for epoch in range(opt.n_epochs):
