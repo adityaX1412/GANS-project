@@ -21,6 +21,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 import wandb
+from torch.utils.data import DataLoader, Dataset
+from PIL import Image
+
 
 from utils.dataloader import CelebADataset
 from utils.gans import Generator,Discriminator
@@ -42,6 +45,9 @@ parser.add_argument("--channels", type=int, default=3, help="number of image cha
 parser.add_argument("--sample_interval", type=int, default=400, help="interval between image sampling")
 parser.add_argument("--wd", type=float, default=0.003, help="weight decay for the optimizer")
 opt = parser.parse_args(args=[])
+
+dataset_name = "tpremoli/CelebA-attrs"
+dataset = load_dataset(dataset_name)
 
 transform = transforms.Compose([
 transforms.Resize(opt.img_size),
