@@ -22,8 +22,46 @@ parser.add_argument("--sample_interval", type=int, default=400, help="interval b
 parser.add_argument("--wd", type=float, default=0.003, help="weight decay for the optimizer")
 opt = parser.parse_args(args=[])
 
+def weights_init_normal(m):
+    classname = m.__class__.__name__
+    if classname.find("Conv") != -1:
+        torch.nn.init.normal_(m.weight.data, 0.0, 0.02)
+    elif classname.find("BatchNorm2d") != -1:
+        torch.nn.init.normal_(m.weight.data, 1.0, 0.02)
+        torch.nn.init.constant_(m.bias.data, 0.0)
+
+# Loss function
+adversarial_loss = torch.nn.BCELoss()
+
+def context_loss(output, target):
+    if output.is_cuda and not target.is_cuda:
+        target = target.cuda()
+    elif not output.is_cuda and target.is_cuda:
+        output = output.cuda()
+    return nn.MSELoss()(output, target)
+
+# Initialize generator and discriminator
+generator = Generator()
+discriminator = Discriminator()
+
+if cuda:
+    generator.cuda()
+    discriminator.cuda()
+    adversarial_loss.cuda()
+
+# Initialize weights
+generator.apply(weights_init_normal)
+discriminator.apply(weights_init_normal)
+
+optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2), weight_decay=opt.wd)
+optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2), weight_decay=opt.wd)
+
+Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
+
+wandb.login(key="833b800ff23eb3d26e6c85a8b9e1fc8bbafc9775")
 # Initialize wandb
 wandb.init(project="DCGAN-CelebA-Inpainting", config=opt.__dict__)
+
 
 # Training loop
 for epoch in range(opt.n_epochs):
