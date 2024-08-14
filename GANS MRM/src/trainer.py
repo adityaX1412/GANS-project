@@ -5,8 +5,29 @@ import math
 import torch
 import numpy as np
 from torch.autograd import Variable
+import argparse
+import os
+import numpy as np
+import math
+
+import torchvision.transforms as transforms
+from torchvision.utils import save_image
+
+from torch.utils.data import DataLoader
+from torchvision import datasets
+from torch.autograd import Variable
+
+import torch.nn as nn
+import torch.nn.functional as F
+import torch
+import wandb
+
+from utils.dataloader import CelebADataset
+from utils.gans import Generator,Discriminator
 
 
+
+cuda = True if torch.cuda.is_available() else False
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--n_epochs", type=int, default=200, help="number of epochs of training")
@@ -21,6 +42,17 @@ parser.add_argument("--channels", type=int, default=3, help="number of image cha
 parser.add_argument("--sample_interval", type=int, default=400, help="interval between image sampling")
 parser.add_argument("--wd", type=float, default=0.003, help="weight decay for the optimizer")
 opt = parser.parse_args(args=[])
+
+transform = transforms.Compose([
+transforms.Resize(opt.img_size),
+transforms.CenterCrop(opt.img_size),
+transforms.ToTensor(),
+transforms.Normalize([0.5], [0.5], [0.5])])
+
+celebA_dataset = CelebADataset(dataset['train'], transform=transform)
+dataloader = DataLoader(celebA_dataset, batch_size=opt.batch_size, shuffle=True, num_workers=opt.n_cpu)
+
+
 
 def weights_init_normal(m):
     classname = m.__class__.__name__
