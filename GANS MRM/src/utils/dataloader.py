@@ -40,16 +40,16 @@ class CelebADataset(Dataset):
     
         # Convert back to PIL Image
         masked_image = Image.fromarray(img_array)
+        return masked_image
+       
+    masked_image = mask_image(image)
 
-    return masked_image
-        masked_image = mask_image(image)
-
-        # Apply transformations
-        if self.transform:
-            image = self.transform(image)
-            masked_image = self.transform(masked_image)
-        
-        return masked_image, image
+    # Apply transformations
+    if self.transform:
+        image = self.transform(image)
+        masked_image = self.transform(masked_image)
+    
+    return masked_image, image
 
 
     
