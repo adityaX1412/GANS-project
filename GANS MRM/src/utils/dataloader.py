@@ -21,8 +21,17 @@ class CelebADataset(Dataset):
         if not isinstance(image, Image.Image):
             image = Image.fromarray(image)
 
-     # Create masked image
-    def mask_image(self,image):
+        # Create masked image
+        masked_image = self.mask_image(image)
+
+        # Apply transformations
+        if self.transform:
+            image = self.transform(image)
+            masked_image = self.transform(masked_image)
+
+        return masked_image, image
+
+    def mask_image(self, image):
         """
         Apply a random mask to the image.
         Here we use a simple rectangular mask for demonstration purposes.
@@ -41,14 +50,6 @@ class CelebADataset(Dataset):
         # Convert back to PIL Image
         masked_image = Image.fromarray(img_array)
         return masked_image
-       
-    masked_image = mask_image(image)
-
-    # Apply transformations
-    if self.transform:
-        image = self.transform(image)
-        masked_image = self.transform(masked_image)
-        return masked_image, image
 
 
     
