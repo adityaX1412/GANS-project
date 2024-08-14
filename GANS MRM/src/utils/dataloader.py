@@ -48,8 +48,7 @@ class CelebADataset(Dataset):
     if self.transform:
         image = self.transform(image)
         masked_image = self.transform(masked_image)
-    
-    return masked_image, image
+        return masked_image, image
 
 
     
