@@ -22,7 +22,7 @@ class CelebADataset(Dataset):
             image = Image.fromarray(image)
 
      # Create masked image
-     def mask_image(self,image):
+    def mask_image(self,image):
         """
         Apply a random mask to the image.
         Here we use a simple rectangular mask for demonstration purposes.
