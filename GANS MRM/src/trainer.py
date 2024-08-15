@@ -113,6 +113,8 @@ for epoch in range(opt.n_epochs):
         # Configure input
         masked_imgs = Variable(masked_imgs.type(Tensor))
         real_imgs = Variable(real_imgs.type(Tensor))
+        print(f"Shape of masked_imgs: {masked_imgs.shape}")
+        print(f"Shape of real_imgs: {real_imgs.shape}")
 
         # Train Generator
         optimizer_G.zero_grad()
