@@ -141,6 +141,7 @@ for epoch in range(opt.n_epochs):
         optimizer_D.step()
 
         # Log losses
+        print("seferf")
         wandb.log({"G_loss": g_loss.item(), "D_loss": d_loss.item(), "epoch": epoch})
 
         # Every few batches, save and log images
