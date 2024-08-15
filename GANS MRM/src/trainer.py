@@ -26,11 +26,8 @@ from torchvision import transforms
 from torch.utils.data import DataLoader, Dataset
 from PIL import Image
 
-
 from utils.dataloader import CelebADataset
-from utils.gans import Generator,Discriminator
-
-
+from utils.gans import Generator, Discriminator
 
 cuda = True if torch.cuda.is_available() else False
 
@@ -52,15 +49,14 @@ dataset_name = "tpremoli/CelebA-attrs"
 dataset = load_dataset(dataset_name)
 
 transform = transforms.Compose([
-transforms.Resize(opt.img_size),
-transforms.CenterCrop(opt.img_size),
-transforms.ToTensor(),
-transforms.Normalize([0.5], [0.5], [0.5])])
+    transforms.Resize(opt.img_size),
+    transforms.CenterCrop(opt.img_size),
+    transforms.ToTensor(),
+    transforms.Normalize([0.5], [0.5], [0.5])
+])
 
 celebA_dataset = CelebADataset(dataset['train'], transform=transform)
 dataloader = DataLoader(celebA_dataset, batch_size=opt.batch_size, shuffle=True, num_workers=opt.n_cpu)
-
-
 
 def weights_init_normal(m):
     classname = m.__class__.__name__
@@ -79,6 +75,14 @@ def context_loss(output, target):
     elif not output.is_cuda and target.is_cuda:
         output = output.cuda()
     return nn.MSELoss()(output, target)
+
+# PSNR Calculation
+def calculate_psnr(img1, img2):
+    mse = torch.mean((img1 - img2) ** 2)
+    if mse == 0:
+        return float('inf')
+    psnr = 20 * torch.log10(1.0 / torch.sqrt(mse))
+    return psnr
 
 # Initialize generator and discriminator
 generator = Generator()
@@ -101,7 +105,6 @@ Tensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 wandb.login(key="833b800ff23eb3d26e6c85a8b9e1fc8bbafc9775")
 # Initialize wandb
 wandb.init(project="DCGAN-CelebA-Inpainting", config=opt.__dict__)
-
 
 # Training loop
 for epoch in range(opt.n_epochs):
@@ -140,9 +143,11 @@ for epoch in range(opt.n_epochs):
         d_loss.backward()
         optimizer_D.step()
 
-        # Log losses
-        print("seferf")
-        wandb.log({"G_loss": g_loss.item(), "D_loss": d_loss.item(), "epoch": epoch})
+        # Calculate PSNR
+        psnr_value = calculate_psnr(gen_imgs, real_imgs)
+
+        # Log losses and PSNR
+        wandb.log({"G_loss": g_loss.item(), "D_loss": d_loss.item(), "PSNR": psnr_value.item(), "epoch": epoch})
 
         # Every few batches, save and log images
         if i % opt.sample_interval == 0:
