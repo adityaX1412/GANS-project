@@ -113,14 +113,13 @@ for epoch in range(opt.n_epochs):
         # Configure input
         masked_imgs = Variable(masked_imgs.type(Tensor))
         real_imgs = Variable(real_imgs.type(Tensor))
-        print(f"Shape of masked_imgs: {masked_imgs.shape}")
-        print(f"Shape of real_imgs: {real_imgs.shape}")
 
         # Train Generator
         optimizer_G.zero_grad()
 
         # Sample noise as generator input (optional, based on specific architecture)
         z = Variable(Tensor(np.random.normal(0, 1, (masked_imgs.size(0), opt.latent_dim))))
+        print(f"Shape of masked_imgs: {z.shape}")
 
         # Generate a batch of images
         gen_imgs = generator(masked_imgs)
