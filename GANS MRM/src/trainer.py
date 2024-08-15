@@ -119,10 +119,9 @@ for epoch in range(opt.n_epochs):
 
         # Sample noise as generator input (optional, based on specific architecture)
         z = Variable(Tensor(np.random.normal(0, 1, (masked_imgs.size(0), opt.latent_dim))))
-        print(f"Shape of masked_imgs: {z.shape}")
 
         # Generate a batch of images
-        gen_imgs = generator(masked_imgs)
+        gen_imgs = generator(z)
 
         # Loss measures generator's ability to fool the discriminator
         g_loss = adversarial_loss(discriminator(gen_imgs), valid) + context_loss(gen_imgs, real_imgs)
